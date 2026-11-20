@@ -104,10 +104,10 @@
     return out.join('').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
   }
 
-  /* X 文章编辑器（Import 入口）兼容转换：
-     Import 认语义 HTML（标题/加粗/列表/代码块都能保留），
-     但不支持表格（会被忽略），这里只转表格；直接粘正文不稳定，
-     必须用编辑器左上角 ⋯ → 导入(Import) → 粘贴 */
+  /* X 文章编辑器兼容转换：
+     实测（x-article-publisher 项目、pandoc 工作流）可稳定入贴的是
+     纯净语义 HTML：无行内样式、无 class，只有语义标签。
+     X 正文只支持 H2/H3 标题，表格不支持（转文本行），颜色/背景一律剥离 */
   function transformForStrictEditors(html) {
     var doc = new DOMParser().parseFromString('<div id="r">' + html + '</div>', 'text/html');
     var root = doc.getElementById('r');
@@ -130,6 +130,24 @@
         frag.appendChild(line);
       }
       tables[j].parentNode.replaceChild(frag, tables[j]);
+    }
+    /* X 正文无 H1/H4-H6，收敛到 H2/H3 */
+    var remap = { H1: 'H2', H4: 'H3', H5: 'H3', H6: 'H3' };
+    var hs = root.querySelectorAll('h1,h2,h3,h4,h5,h6');
+    for (var n = 0; n < hs.length; n++) {
+      var tag = remap[hs[n].tagName];
+      if (tag) {
+        var neo = doc.createElement(tag);
+        neo.innerHTML = hs[n].innerHTML;
+        hs[n].parentNode.replaceChild(neo, hs[n]);
+      }
+    }
+    /* 剥离全部 style / class / id 属性，输出纯净语义 HTML */
+    var all = root.querySelectorAll('*');
+    for (var q = 0; q < all.length; q++) {
+      all[q].removeAttribute('style');
+      all[q].removeAttribute('class');
+      all[q].removeAttribute('id');
     }
     return root.innerHTML;
   }
@@ -236,20 +254,23 @@
     }
     var theme = getTheme(state.themeId);
     var sourceHtml = state.compatX ? transformForStrictEditors(state.rendered) : state.rendered;
-    /* X 兼容模式下去掉包裹层，输出干净的语义 HTML 片段（Import 入口更友好） */
-    var wrapped = state.compatX
-      ? sourceHtml
-      : '<section class="md2post-root">' + sourceHtml + '</section>';
-    var css = BASE_CSS + '\n' + theme.css;
-
-    var html = wrapped;
-    try {
-      html = window.juice.inlineContent(wrapped, css);
-    } catch (e) {
-      console.warn('juice 内联失败，退回未内联 HTML：', e);
+    var html;
+    var plain;
+    if (state.compatX) {
+      /* X 兼容模式：纯净语义 HTML，跳过 juice 内联（X 会剥离全部行内样式） */
+      html = sourceHtml;
+      plain = htmlToPlain(sourceHtml);
+    } else {
+      var wrapped = '<section class="md2post-root">' + sourceHtml + '</section>';
+      html = wrapped;
+      try {
+        html = window.juice.inlineContent(wrapped, BASE_CSS + '\n' + theme.css);
+      } catch (e) {
+        console.warn('juice 内联失败，退回未内联 HTML：', e);
+      }
+      html = inlineTokenColors(html);
+      plain = htmlToPlain(wrapped);
     }
-    html = inlineTokenColors(html);
-    var plain = htmlToPlain(wrapped);
 
     var ok = false;
     try {
@@ -267,7 +288,7 @@
 
     if (ok) {
       toast(state.compatX
-        ? '已复制（X 兼容模式）：在 X 文章编辑器点左上角 ⋯ → 导入(Import) → 粘贴，直接粘正文会丢格式'
+        ? '已复制（X 兼容模式：纯净语义 HTML），直接粘贴到 X 文章编辑器正文'
         : '已复制带排版富文本，去公众号/知乎/飞书直接 Ctrl+V 粘贴');
       btnCopy.textContent = '已复制 ✓';
       btnCopy.classList.add('copied');

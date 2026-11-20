@@ -94,7 +94,7 @@
           {
             "@type": "Question",
             "name": "为什么粘贴到 X（Twitter）文章编辑器会丢样式？",
-            "acceptedAnswer": { "@type": "Answer", "text": "直接把富文本粘进 X 文章正文是不稳定的（标题丢失、段落合并）。正确做法：勾选「X 兼容」复制后，在 X 文章编辑器点左上角 ⋯ → 导入(Import) → 粘贴，标题、加粗、列表、引用、链接、代码块即可完整保留（单篇代码总量上限 4000 字符）。表格 X 不支持，MD2Post 的 X 兼容模式会自动转成文本行。" }
+            "acceptedAnswer": { "@type": "Answer", "text": "X 文章编辑器对带大量行内样式的富文本解析不稳定，会丢标题、合并段落。解决方法：勾选「X 兼容」后复制，MD2Post 会输出纯净语义 HTML（保留 H2/H3 标题、加粗、斜体、列表、引用、链接、代码块，表格转文本行、无行内样式），直接粘贴到 X 文章正文即可。颜色、字号、背景等视觉样式 X 一律剥离，属平台限制。" }
           }
         ]
       }
@@ -138,7 +138,7 @@ Ctrl/Cmd + Enter 快速复制富文本"></textarea>
       <div class="theme-bar">
         <span class="theme-label">排版主题</span>
         <div id="theme-switch" class="theme-switch" role="tablist" aria-label="排版主题"></div>
-        <label class="compat-toggle" title="X 文章编辑器专用：表格转文本行（Import 不支持表格）；复制后必须用编辑器左上角 ⋯ → 导入(Import) → 粘贴，直接粘正文会丢格式"><input type="checkbox" id="compat-x"> X 兼容</label>
+        <label class="compat-toggle" title="X 文章编辑器专用：输出纯净语义 HTML（保留 H2/H3 标题、加粗、列表、代码块，无行内样式），表格转文本行；直接粘贴到 X 文章正文"><input type="checkbox" id="compat-x"> X 兼容</label>
       </div>
       <div id="preview-shell" class="preview-shell">
         <div id="preview" class="md2post-preview"></div>
@@ -188,7 +188,7 @@ Ctrl/Cmd + Enter 快速复制富文本"></textarea>
       </details>
       <details>
         <summary>为什么粘贴到 X（Twitter）文章编辑器会丢样式？</summary>
-        <p><strong>直接把富文本粘进 X 文章正文是不稳定的</strong>——会偶发标题丢失、段落合并，这是 X 编辑器自身的已知问题。正确做法：勾选预览栏的<strong>「X 兼容」</strong>后点复制，然后在 X 文章编辑器点左上角 <strong>⋯ → 导入(Import) → 粘贴</strong>，标题、加粗、列表、引用、链接、代码块即可完整保留（代码总量上限 4000 字符/篇）。颜色、字号等视觉样式 X 一律剥离，属平台限制；表格 X 不支持，X 兼容模式会自动转成文本行。</p>
+        <p><strong>直接粘贴带行内样式的富文本，X 解析不稳定</strong>（丢标题、段落合并）。解决方法：勾选预览栏的<strong>「X 兼容」</strong>后点复制，MD2Post 会输出纯净语义 HTML——保留 H2/H3 标题、加粗、斜体、列表、引用、链接、代码块，表格自动转文本行——然后直接粘贴到 X 文章编辑器正文。颜色、字号、背景等视觉样式 X 一律剥离，属平台限制。</p>
       </details>
 
       <!-- AdSense 广告位 2（FAQ 之后）：过审后在此粘贴广告单元代码 -->
