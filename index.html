@@ -94,7 +94,7 @@
           {
             "@type": "Question",
             "name": "为什么粘贴到 X（Twitter）文章编辑器会丢样式？",
-            "acceptedAnswer": { "@type": "Answer", "text": "X 的文章编辑器会剥离全部行内样式（颜色、字号、背景、边框等），只保留标题、加粗、斜体、列表、引用、链接等语义结构，这是平台限制，任何网页工具都无法绕过。MD2Post 主打微信公众号等保留行内样式的平台；对 X 等严格平台，建议直接粘贴纯文本后用平台自带排版。" }
+            "acceptedAnswer": { "@type": "Answer", "text": "X 的文章编辑器会剥离全部行内样式（颜色、字号、背景、边框等），只保留加粗、斜体、列表、引用、链接等语义结构，这是平台限制，任何网页工具都无法绕过。建议在 MD2Post 勾选「X 兼容」后再复制：标题会转为加粗独立段落、表格转为文本行，避免被合并进上一段，最大限度保留文章层次。" }
           }
         ]
       }
@@ -138,6 +138,7 @@ Ctrl/Cmd + Enter 快速复制富文本"></textarea>
       <div class="theme-bar">
         <span class="theme-label">排版主题</span>
         <div id="theme-switch" class="theme-switch" role="tablist" aria-label="排版主题"></div>
+        <label class="compat-toggle" title="针对 X 文章编辑器等严格平台：标题转为加粗段落、表格转为文本行，避免被合并进上一段"><input type="checkbox" id="compat-x"> X 兼容</label>
       </div>
       <div id="preview-shell" class="preview-shell">
         <div id="preview" class="md2post-preview"></div>
@@ -187,7 +188,7 @@ Ctrl/Cmd + Enter 快速复制富文本"></textarea>
       </details>
       <details>
         <summary>为什么粘贴到 X（Twitter）文章编辑器会丢样式？</summary>
-        <p>X 的文章编辑器会剥离全部行内样式（颜色、字号、背景、边框等），只保留标题、加粗、斜体、列表、引用、链接等语义结构——这是平台的内容白名单机制，任何网页工具都无法绕过。MD2Post 主打微信公众号等保留行内样式的平台；对 X 这类严格平台，建议直接粘贴纯文本后用平台自带工具排版。</p>
+        <p>X 的文章编辑器会剥离全部行内样式（颜色、字号、背景、边框等），只保留加粗、斜体、列表、引用、链接等语义结构——这是平台的内容白名单机制，任何网页工具都无法绕过。建议在 MD2Post 预览栏勾选<strong>「X 兼容」</strong>后再复制：标题会转为加粗独立段落、表格转为文本行，避免被合并进上一段，最大限度保留文章层次。</p>
       </details>
 
       <!-- AdSense 广告位 2（FAQ 之后）：过审后在此粘贴广告单元代码 -->

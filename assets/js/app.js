@@ -35,8 +35,9 @@
     editor: document.getElementById('view-editor'),
     preview: document.getElementById('view-preview')
   };
+  var compatToggle = document.getElementById('compat-x');
 
-  var state = { rendered: '', themeId: null };
+  var state = { rendered: '', themeId: null, compatX: false };
   var renderTimer = null;
   var saveTimer = null;
   var toastTimer = null;
@@ -83,8 +84,62 @@
   }
 
   function htmlToPlain(html) {
+    /* 按块级元素补换行，避免纯文本兑底被拼成一整段 */
     var doc = new DOMParser().parseFromString(html, 'text/html');
-    return (doc.body.textContent || '').replace(/\n{3,}/g, '\n\n').trim();
+    var out = [];
+    var BLOCK = /^(P|DIV|H[1-6]|UL|OL|LI|BLOCKQUOTE|PRE|TABLE|THEAD|TBODY|TR|HR|SECTION|FIGURE)$/;
+    (function walk(node) {
+      for (var i = 0; i < node.childNodes.length; i++) {
+        var child = node.childNodes[i];
+        if (child.nodeType === 3) {
+          out.push(child.nodeValue);
+        } else if (child.nodeType === 1) {
+          if (child.tagName === 'BR') { out.push('\n'); continue; }
+          if (BLOCK.test(child.tagName) && out.length && !/\n$/.test(out[out.length - 1])) out.push('\n');
+          walk(child);
+          if (BLOCK.test(child.tagName)) out.push('\n');
+        }
+      }
+    })(doc.body);
+    return out.join('').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+  }
+
+  /* 严格编辑器（X 文章等）兼容转换：
+     它们的内容模型只认语义标签，不支持的块（标题/表格）
+     会被降级并合并进上一段；这里提前转成它们认识的形态 */
+  function transformForStrictEditors(html) {
+    var doc = new DOMParser().parseFromString('<div id="r">' + html + '</div>', 'text/html');
+    var root = doc.getElementById('r');
+    var headings = root.querySelectorAll('h1,h2,h3,h4,h5,h6');
+    for (var i = 0; i < headings.length; i++) {
+      var el = headings[i];
+      var p = doc.createElement('p');
+      var b = doc.createElement('strong');
+      b.textContent = el.textContent;
+      p.appendChild(b);
+      el.parentNode.replaceChild(p, el);
+    }
+    var tables = root.querySelectorAll('table');
+    for (var j = 0; j < tables.length; j++) {
+      var frag = doc.createDocumentFragment();
+      var rows = tables[j].querySelectorAll('tr');
+      for (var k = 0; k < rows.length; k++) {
+        var cells = rows[k].querySelectorAll('th,td');
+        var content = [];
+        for (var m = 0; m < cells.length; m++) content.push(cells[m].textContent.trim());
+        var line = doc.createElement('p');
+        if (rows[k].querySelector('th')) {
+          var bb = doc.createElement('strong');
+          bb.textContent = content.join(' ｜ ');
+          line.appendChild(bb);
+        } else {
+          line.textContent = content.join(' ｜ ');
+        }
+        frag.appendChild(line);
+      }
+      tables[j].parentNode.replaceChild(frag, tables[j]);
+    }
+    return root.innerHTML;
   }
 
   /* 代码高亮 token 直接落成行内样式：公众号粘贴会剥掉 class，靠类名的颜色会丢 */
@@ -188,7 +243,8 @@
       return;
     }
     var theme = getTheme(state.themeId);
-    var wrapped = '<section class="md2post-root">' + state.rendered + '</section>';
+    var sourceHtml = state.compatX ? transformForStrictEditors(state.rendered) : state.rendered;
+    var wrapped = '<section class="md2post-root">' + sourceHtml + '</section>';
     var css = BASE_CSS + '\n' + theme.css;
 
     var html = wrapped;
@@ -215,7 +271,9 @@
     if (!ok) ok = legacyCopy(html);
 
     if (ok) {
-      toast('已复制带排版富文本，去公众号/知乎/飞书直接 Ctrl+V 粘贴');
+      toast(state.compatX
+        ? '已复制（X 兼容模式：标题已转为加粗段落），去文章编辑器直接粘贴'
+        : '已复制带排版富文本，去公众号/知乎/飞书直接 Ctrl+V 粘贴');
       btnCopy.textContent = '已复制 ✓';
       btnCopy.classList.add('copied');
       setTimeout(function () {
@@ -338,6 +396,10 @@
   });
 
   btnCopy.addEventListener('click', copyRich);
+  compatToggle.addEventListener('change', function () {
+    state.compatX = compatToggle.checked;
+    try { localStorage.setItem('md2post.compatX', state.compatX ? '1' : '0'); } catch (e) { /* 忽略 */ }
+  });
   btnImport.addEventListener('click', function () { fileInput.click(); });
   fileInput.addEventListener('change', function () {
     importFile(fileInput.files && fileInput.files[0]);
@@ -397,6 +459,9 @@
 
     /* 小屏默认只显示编辑视图 */
     if (window.matchMedia('(max-width: 900px)').matches) setView('editor');
+
+    try { state.compatX = localStorage.getItem('md2post.compatX') === '1'; } catch (e) { state.compatX = false; }
+    compatToggle.checked = state.compatX;
 
     var saved = null;
     try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) { /* 忽略 */ }
