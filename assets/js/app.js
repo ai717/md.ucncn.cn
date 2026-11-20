@@ -31,6 +31,10 @@
   var fileInput = document.getElementById('file-input');
   var dropOverlay = document.getElementById('drop-overlay');
   var toastEl = document.getElementById('toast');
+  var viewButtons = {
+    editor: document.getElementById('view-editor'),
+    preview: document.getElementById('view-preview')
+  };
 
   var state = { rendered: '', themeId: null };
   var renderTimer = null;
@@ -301,12 +305,27 @@
     }
   });
 
+  /* ---------- 移动端编辑/预览切换 ---------- */
+
+  function setView(view) {
+    document.body.setAttribute('data-view', view);
+    for (var key in viewButtons) {
+      viewButtons[key].classList.toggle('active', key === view);
+      viewButtons[key].setAttribute('aria-selected', key === view ? 'true' : 'false');
+    }
+    if (view === 'preview') previewShell.scrollTop = 0;
+  }
+
+  viewButtons.editor.addEventListener('click', function () { setView('editor'); });
+  viewButtons.preview.addEventListener('click', function () { setView('preview'); });
+
   /* ---------- 事件绑定与初始化 ---------- */
 
   editor.addEventListener('input', onInput);
 
-  /* 编辑区滚动 → 预览区按比例跟随 */
+  /* 编辑区滚动 → 预览区按比例跟随（移动端单栏视图下禁用，避免与触控滚动打架） */
   editor.addEventListener('scroll', function () {
+    if (window.matchMedia('(max-width: 900px)').matches) return;
     var ratio = editor.scrollTop / Math.max(1, editor.scrollHeight - editor.clientHeight);
     previewShell.scrollTop = ratio * (previewShell.scrollHeight - previewShell.clientHeight);
   });
@@ -375,6 +394,9 @@
 
   function init() {
     buildThemeSwitch();
+
+    /* 小屏默认只显示编辑视图 */
+    if (window.matchMedia('(max-width: 900px)').matches) setView('editor');
 
     var saved = null;
     try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) { /* 忽略 */ }

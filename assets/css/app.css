@@ -320,19 +320,70 @@ body {
   text-align: center;
 }
 
-/* 窄屏适配 */
-@media (max-width: 900px) {
-  .workspace {
-    grid-template-columns: 1fr;
-    grid-template-rows: 45vh 1fr;
-  }
-  .pane-editor { border-right: none; border-bottom: 1px solid #e8e8ec; }
-  .tagline { display: none; }
-  .statusbar span:last-child { display: none; }
-  .preview-shell { padding: 12px; }
+/* 移动端视图切换条（仅小屏显示） */
+.view-switch {
+  display: none;
+  gap: 8px;
+  padding: 8px 14px;
+  background: #fcfcfd;
+  border-bottom: 1px solid #e8e8ec;
+  justify-content: center;
 }
 
+.view-switch button {
+  flex: 1;
+  max-width: 170px;
+  border: 1px solid #d7d9e0;
+  background: #ffffff;
+  color: #3a3f47;
+  border-radius: 10px;
+  padding: 10px 0;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.view-switch button.active {
+  background: #3056d3;
+  border-color: #3056d3;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* 窄屏适配 */
 @media (max-width: 900px) {
-  body { height: auto; min-height: 100%; }
-  .workspace { min-height: 0; }
+  body {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .workspace {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    flex: 1 1 auto;
+    min-height: 62vh;
+  }
+  .view-switch { display: flex; }
+  body[data-view="editor"] .pane-preview { display: none; }
+  body[data-view="preview"] .pane-editor { display: none; }
+  .pane-editor { border-right: none; border-bottom: 1px solid #e8e8ec; }
+  .tagline { display: none; }
+  .topbar { flex-wrap: wrap; padding: 10px 14px; row-gap: 8px; }
+  .brand h1 { font-size: 18px; }
+  .actions { gap: 6px; }
+  .btn { padding: 9px 12px; font-size: 13px; }
+  .theme-bar { flex-wrap: wrap; }
+  .theme-switch button { padding: 7px 12px; }
+  .statusbar { flex-wrap: wrap; }
+  .statusbar span:last-child { display: none; }
+  .preview-shell { padding: 14px; }
+  /* 预览内边距主题用行内样式设置，这里用 !important 收紧小屏留白 */
+  #preview { padding: 26px 18px !important; }
+  /* 16px 以上避免 iOS 聚焦时自动放大 */
+  #editor { font-size: 16px; padding: 16px; }
+}
+
+@media (max-width: 480px) {
+  .brand h1 { font-size: 17px; }
+  .btn { padding: 9px 10px; }
 }
