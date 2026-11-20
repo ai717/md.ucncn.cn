@@ -142,12 +142,29 @@
         hs[n].parentNode.replaceChild(neo, hs[n]);
       }
     }
+    /* 代码块：去掉高亮 span 碎片，展平为纯文本，并保留语言标记（X 依此识别代码块） */
+    var codes = root.querySelectorAll('pre code');
+    var langs = [];
+    for (var c = 0; c < codes.length; c++) {
+      var lang = (codes[c].getAttribute('class') || '').match(/language-([\w-]+)/);
+      langs.push(lang ? lang[1] : null);
+    }
     /* 剥离全部 style / class / id 属性，输出纯净语义 HTML */
     var all = root.querySelectorAll('*');
     for (var q = 0; q < all.length; q++) {
       all[q].removeAttribute('style');
       all[q].removeAttribute('class');
       all[q].removeAttribute('id');
+    }
+    for (var d = 0; d < codes.length; d++) {
+      var codeEl = codes[d];
+      var preEl = codeEl.parentNode;
+      var pair = [codeEl, preEl];
+      for (var e = 0; e < pair.length; e++) {
+        while (pair[e].attributes.length) pair[e].removeAttribute(pair[e].attributes[0].name);
+      }
+      codeEl.textContent = codeEl.textContent;
+      if (langs[d]) codeEl.setAttribute('class', 'language-' + langs[d]);
     }
     return root.innerHTML;
   }
