@@ -363,6 +363,16 @@ body {
     flex: 1 1 auto;
     min-height: 62vh;
   }
+  /* 编辑视图＝沉浸全屏：吃满切换条以下全部空间，底部内容区隐藏（预览视图可达） */
+  body[data-view="editor"] {
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+  body[data-view="editor"] .workspace {
+    min-height: 0;
+  }
+  body[data-view="editor"] .seo-content { display: none; }
   .view-switch { display: flex; }
   body[data-view="editor"] .pane-preview { display: none; }
   body[data-view="preview"] .pane-editor { display: none; }
