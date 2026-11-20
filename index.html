@@ -94,7 +94,7 @@
           {
             "@type": "Question",
             "name": "为什么粘贴到 X（Twitter）文章编辑器会丢样式？",
-            "acceptedAnswer": { "@type": "Answer", "text": "X 的文章编辑器会剥离全部行内样式（颜色、字号、背景、边框等），只保留加粗、斜体、列表、引用、链接等语义结构，这是平台限制，任何网页工具都无法绕过。建议在 MD2Post 勾选「X 兼容」后再复制：标题会转为加粗独立段落、表格转为文本行，避免被合并进上一段，最大限度保留文章层次。" }
+            "acceptedAnswer": { "@type": "Answer", "text": "直接把富文本粘进 X 文章正文是不稳定的（标题丢失、段落合并）。正确做法：勾选「X 兼容」复制后，在 X 文章编辑器点左上角 ⋯ → 导入(Import) → 粘贴，标题、加粗、列表、引用、链接、代码块即可完整保留（单篇代码总量上限 4000 字符）。表格 X 不支持，MD2Post 的 X 兼容模式会自动转成文本行。" }
           }
         ]
       }
@@ -138,7 +138,7 @@ Ctrl/Cmd + Enter 快速复制富文本"></textarea>
       <div class="theme-bar">
         <span class="theme-label">排版主题</span>
         <div id="theme-switch" class="theme-switch" role="tablist" aria-label="排版主题"></div>
-        <label class="compat-toggle" title="针对 X 文章编辑器等严格平台：标题转为加粗段落、表格转为文本行，避免被合并进上一段"><input type="checkbox" id="compat-x"> X 兼容</label>
+        <label class="compat-toggle" title="X 文章编辑器专用：表格转文本行（Import 不支持表格）；复制后必须用编辑器左上角 ⋯ → 导入(Import) → 粘贴，直接粘正文会丢格式"><input type="checkbox" id="compat-x"> X 兼容</label>
       </div>
       <div id="preview-shell" class="preview-shell">
         <div id="preview" class="md2post-preview"></div>
@@ -188,7 +188,7 @@ Ctrl/Cmd + Enter 快速复制富文本"></textarea>
       </details>
       <details>
         <summary>为什么粘贴到 X（Twitter）文章编辑器会丢样式？</summary>
-        <p>X 的文章编辑器会剥离全部行内样式（颜色、字号、背景、边框等），只保留加粗、斜体、列表、引用、链接等语义结构——这是平台的内容白名单机制，任何网页工具都无法绕过。建议在 MD2Post 预览栏勾选<strong>「X 兼容」</strong>后再复制：标题会转为加粗独立段落、表格转为文本行，避免被合并进上一段，最大限度保留文章层次。</p>
+        <p><strong>直接把富文本粘进 X 文章正文是不稳定的</strong>——会偶发标题丢失、段落合并，这是 X 编辑器自身的已知问题。正确做法：勾选预览栏的<strong>「X 兼容」</strong>后点复制，然后在 X 文章编辑器点左上角 <strong>⋯ → 导入(Import) → 粘贴</strong>，标题、加粗、列表、引用、链接、代码块即可完整保留（代码总量上限 4000 字符/篇）。颜色、字号等视觉样式 X 一律剥离，属平台限制；表格 X 不支持，X 兼容模式会自动转成文本行。</p>
       </details>
 
       <!-- AdSense 广告位 2（FAQ 之后）：过审后在此粘贴广告单元代码 -->

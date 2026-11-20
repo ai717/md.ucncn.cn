@@ -104,21 +104,13 @@
     return out.join('').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
   }
 
-  /* 严格编辑器（X 文章等）兼容转换：
-     它们的内容模型只认语义标签，不支持的块（标题/表格）
-     会被降级并合并进上一段；这里提前转成它们认识的形态 */
+  /* X 文章编辑器（Import 入口）兼容转换：
+     Import 认语义 HTML（标题/加粗/列表/代码块都能保留），
+     但不支持表格（会被忽略），这里只转表格；直接粘正文不稳定，
+     必须用编辑器左上角 ⋯ → 导入(Import) → 粘贴 */
   function transformForStrictEditors(html) {
     var doc = new DOMParser().parseFromString('<div id="r">' + html + '</div>', 'text/html');
     var root = doc.getElementById('r');
-    var headings = root.querySelectorAll('h1,h2,h3,h4,h5,h6');
-    for (var i = 0; i < headings.length; i++) {
-      var el = headings[i];
-      var p = doc.createElement('p');
-      var b = doc.createElement('strong');
-      b.textContent = el.textContent;
-      p.appendChild(b);
-      el.parentNode.replaceChild(p, el);
-    }
     var tables = root.querySelectorAll('table');
     for (var j = 0; j < tables.length; j++) {
       var frag = doc.createDocumentFragment();
@@ -244,7 +236,10 @@
     }
     var theme = getTheme(state.themeId);
     var sourceHtml = state.compatX ? transformForStrictEditors(state.rendered) : state.rendered;
-    var wrapped = '<section class="md2post-root">' + sourceHtml + '</section>';
+    /* X 兼容模式下去掉包裹层，输出干净的语义 HTML 片段（Import 入口更友好） */
+    var wrapped = state.compatX
+      ? sourceHtml
+      : '<section class="md2post-root">' + sourceHtml + '</section>';
     var css = BASE_CSS + '\n' + theme.css;
 
     var html = wrapped;
@@ -272,7 +267,7 @@
 
     if (ok) {
       toast(state.compatX
-        ? '已复制（X 兼容模式：标题已转为加粗段落），去文章编辑器直接粘贴'
+        ? '已复制（X 兼容模式）：在 X 文章编辑器点左上角 ⋯ → 导入(Import) → 粘贴，直接粘正文会丢格式'
         : '已复制带排版富文本，去公众号/知乎/飞书直接 Ctrl+V 粘贴');
       btnCopy.textContent = '已复制 ✓';
       btnCopy.classList.add('copied');
