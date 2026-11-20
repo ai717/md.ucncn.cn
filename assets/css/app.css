@@ -1,0 +1,271 @@
+/* MD2Post 应用界面样式（与导出排版主题无关，仅本站 UI） */
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+  background: #f7f7f8;
+  color: #1f2328;
+}
+
+/* 顶栏 */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #e8e8ec;
+  flex: none;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: .5px;
+  color: #3056d3;
+  white-space: nowrap;
+}
+
+.tagline {
+  font-size: 12px;
+  color: #8a8f99;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex: none;
+}
+
+.btn {
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
+  font-family: inherit;
+}
+
+.btn.ghost {
+  background: #ffffff;
+  border-color: #d7d9e0;
+  color: #3a3f47;
+}
+
+.btn.ghost:hover { background: #f2f3f7; }
+
+.btn.primary {
+  background: #3056d3;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.btn.primary:hover { background: #2748b8; }
+
+.btn.primary.copied {
+  background: #1a9f5c;
+}
+
+/* 主体分栏 */
+.workspace {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 0;
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.pane-editor {
+  border-right: 1px solid #e8e8ec;
+}
+
+/* 编辑区 */
+#editor {
+  flex: 1;
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  padding: 20px 24px;
+  background: #ffffff;
+  color: #1f2328;
+  font-family: ui-monospace, "Cascadia Code", Consolas, "JetBrains Mono", Menlo, monospace;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+#editor::placeholder { color: #b0b4bd; }
+
+.pane-foot {
+  flex: none;
+  padding: 7px 20px;
+  border-top: 1px solid #e8e8ec;
+  background: #fcfcfd;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.pane-foot em {
+  font-style: normal;
+  margin-left: 12px;
+  color: #9aa0aa;
+}
+
+/* 预览区 */
+.theme-bar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 20px;
+  border-bottom: 1px solid #e8e8ec;
+  background: #fcfcfd;
+}
+
+.theme-label {
+  font-size: 12px;
+  color: #8a8f99;
+  white-space: nowrap;
+}
+
+.theme-switch {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.theme-switch button {
+  border: 1px solid #d7d9e0;
+  background: #ffffff;
+  color: #3a3f47;
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .15s ease;
+}
+
+.theme-switch button:hover { border-color: #3056d3; color: #3056d3; }
+
+.theme-switch button.active {
+  background: #3056d3;
+  border-color: #3056d3;
+  color: #ffffff;
+}
+
+.preview-shell {
+  flex: 1;
+  overflow: auto;
+  background: #f0f1f4;
+  padding: 24px;
+  min-height: 0;
+}
+
+.md2post-preview {
+  max-width: 720px;
+  margin: 0 auto;
+  background: #ffffff;
+  word-break: break-word;
+  min-height: 100%;
+}
+
+/* 状态栏 */
+.statusbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 20px;
+  border-top: 1px solid #e8e8ec;
+  background: #ffffff;
+  font-size: 12px;
+  color: #9aa0aa;
+}
+
+/* 拖拽遮罩 */
+.drop-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(48, 86, 211, .08);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.drop-overlay[hidden] { display: none; }
+
+.drop-box {
+  border: 2px dashed #3056d3;
+  border-radius: 16px;
+  padding: 36px 60px;
+  background: #ffffff;
+  color: #3056d3;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Toast 提示 */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 56px;
+  transform: translateX(-50%);
+  background: rgba(23, 26, 33, .92);
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 13px;
+  max-width: 82vw;
+  z-index: 110;
+  transition: opacity .25s ease;
+}
+
+.toast[hidden] { display: none; }
+
+.noscript {
+  padding: 40px;
+  text-align: center;
+}
+
+/* 窄屏适配 */
+@media (max-width: 900px) {
+  .workspace {
+    grid-template-columns: 1fr;
+    grid-template-rows: 45vh 1fr;
+  }
+  .pane-editor { border-right: none; border-bottom: 1px solid #e8e8ec; }
+  .tagline { display: none; }
+  .statusbar span:last-child { display: none; }
+  .preview-shell { padding: 12px; }
+}

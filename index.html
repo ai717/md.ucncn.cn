@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MD2Post — 极简 Markdown 实时预览与一键富文本排版工具</title>
+  <meta name="description" content="MD2Post 是纯浏览器本地运行的 Markdown 排版工具：左侧写 Markdown，右侧实时预览，一键复制带行内样式的富文本，直接粘贴到微信公众号、知乎、掘金、飞书等编辑器，排版不丢。无需登录，内容不出设备。">
+  <meta name="keywords" content="Markdown,微信公众号排版,公众号编辑器,知乎排版,富文本复制,Markdown 编辑器,MD2Post">
+  <meta property="og:title" content="MD2Post — 极简 Markdown 实时预览与一键富文本排版工具">
+  <meta property="og:description" content="左侧写 Markdown，右侧实时预览，一键复制带行内样式的富文本，直接粘贴到微信公众号、知乎、掘金、飞书，排版不丢。纯本地运行，免登录。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://md.ucncn.cn/">
+  <link rel="canonical" href="https://md.ucncn.cn/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%233056d3'/%3E%3Ctext x='50' y='70' font-size='54' text-anchor='middle' fill='white' font-family='Arial,sans-serif' font-weight='bold'%3EM%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <style id="preview-style"></style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <h1>MD2Post</h1>
+      <span class="tagline">极简 Markdown 实时预览 · 一键富文本排版复制</span>
+    </div>
+    <div class="actions">
+      <button id="btn-import" class="btn ghost" type="button" title="导入本地 .md 文件">导入 .md</button>
+      <button id="btn-clear" class="btn ghost" type="button" title="清空当前内容">清空</button>
+      <button id="btn-copy" class="btn primary" type="button" title="复制带行内样式的富文本（Ctrl/Cmd + Enter）">复制富文本</button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <section class="pane pane-editor">
+      <textarea id="editor" spellcheck="false" placeholder="在这里粘贴或输入 Markdown…
+
+支持直接把 .md 文件拖进页面
+Ctrl/Cmd + Enter 快速复制富文本"></textarea>
+      <div class="pane-foot">
+        <span id="stat-chars">0</span> 字符 ·
+        <span id="stat-words">0</span> 字词 ·
+        约需阅读 <span id="stat-minutes">1</span> 分钟
+        <em id="save-hint"></em>
+      </div>
+    </section>
+
+    <section class="pane pane-preview">
+      <div class="theme-bar">
+        <span class="theme-label">排版主题</span>
+        <div id="theme-switch" class="theme-switch" role="tablist" aria-label="排版主题"></div>
+      </div>
+      <div id="preview-shell" class="preview-shell">
+        <div id="preview" class="md2post-preview"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="statusbar">
+    <span>纯浏览器本地运行 · 内容不出设备</span>
+    <span>复制后可直接粘贴到：微信公众号 / 知乎 / 掘金 / 飞书</span>
+  </footer>
+
+  <div id="drop-overlay" class="drop-overlay" hidden>
+    <div class="drop-box">松手导入 Markdown 文件</div>
+  </div>
+  <div id="toast" class="toast" hidden></div>
+
+  <noscript><p class="noscript">MD2Post 需要启用 JavaScript 才能渲染与复制富文本。</p></noscript>
+  <input id="file-input" type="file" accept=".md,.markdown,.txt" hidden>
+
+  <script src="assets/vendor/marked.min.js"></script>
+  <script src="assets/vendor/purify.min.js"></script>
+  <script src="assets/vendor/highlight.min.js"></script>
+  <script src="assets/vendor/juice.min.js"></script>
+  <script src="assets/js/themes.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
