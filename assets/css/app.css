@@ -92,7 +92,8 @@ body {
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  min-height: 0;
+  /* 底部 SEO 内容区较高，防止工作区被 flex 收缩压扁（顶栏 60px + 状态栏 30px） */
+  min-height: calc(100vh - 96px);
 }
 
 .pane {
