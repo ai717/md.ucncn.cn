@@ -58,6 +58,32 @@
 2. 仓库里已包含 `CNAME` 文件（内容为 `md.ucncn.cn`），
    并在 DNS 给 `md.ucncn.cn` 添加指向 GitHub Pages 的 CNAME 记录。
 
+## SEO 与 Google 收益
+
+站内已做的优化：
+
+- **元信息**：完整的 description / keywords / canonical / robots（`max-image-preview:large`）/
+  Open Graph / Twitter Card，og 分享图 `assets/og-image.png`（1200×630）；
+- **结构化数据**：首页内嵌 JSON-LD（`WebApplication` + `FAQPage`），可命中富摘要；
+  FAQPage 的问答与页面可见的 FAQ 文案逐字一致（Google 硬性要求）；
+- **页面内容**：工具下方有一段可抓取的中文内容区（原理说明 / 三步教程 / FAQ），
+  覆盖「公众号排版」「Markdown 转富文本」等搜索意图；
+- **收录基础设施**：`robots.txt`（含 Sitemap 声明）、`sitemap.xml`。
+
+上线后需要你手动做的：
+
+1. **Google Search Console**：添加资源 `https://md.ucncn.cn/`，DNS TXT 记录验证后，
+   在「站点地图」提交 `https://md.ucncn.cn/sitemap.xml`，并对首页请求编入索引；
+2. **Google AdSense**：注册并通过审核后——
+   - 在 `index.html` 头部预留的 AdSense 注释处粘贴自动广告脚本（`ca-pub-…`）；
+   - 页面内容区已预留两个广告位注释（教程下方、FAQ 之后），可粘贴广告单元代码；
+   - 在站点根目录创建 `ads.txt`，内容为一行：
+     `google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0`；
+3. Bing/Webmaster 等其它引擎同理，robots.txt 与 sitemap 已通用。
+
+> 注意：AdSense 审核要求站内有足量原创内容且隐私政策完备；工具站建议后续增加
+> 使用教程/博客文章页充实内容后再提审，通过率更高。
+
 ## 目录结构
 
 ```
@@ -67,6 +93,9 @@ assets/
   js/themes.js          4 套排版主题 + 代码高亮 token 颜色表
   js/app.js             核心逻辑（渲染 / juice 内联 / 富文本剪贴板 / 草稿）
   vendor/               本地化依赖：marked、DOMPurify、highlight.js、juice
+  og-image.png          og/twitter 分享图（1200×630）
+robots.txt              爬虫规则 + Sitemap 声明
+sitemap.xml             站点地图（提交给 Google Search Console 等）
 CNAME                   GitHub Pages 自定义域名
 ```
 

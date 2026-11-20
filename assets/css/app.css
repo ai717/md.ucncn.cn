@@ -197,6 +197,68 @@ body {
   min-height: 100%;
 }
 
+/* SEO 内容区 */
+.seo-content {
+  flex: none;
+  background: #ffffff;
+  border-top: 1px solid #e8e8ec;
+}
+
+.seo-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 24px 48px;
+}
+
+.seo-inner h2 {
+  font-size: 18px;
+  color: #1f2328;
+  margin: 32px 0 12px;
+}
+
+.seo-inner h2:first-child { margin-top: 0; }
+
+.seo-inner p, .seo-inner li {
+  font-size: 14px;
+  line-height: 1.9;
+  color: #4a4f57;
+  margin: 0 0 10px;
+}
+
+.seo-inner ol, .seo-inner ul {
+  padding-left: 22px;
+  margin: 0 0 10px;
+}
+
+.seo-inner code {
+  background: #f2f3f7;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 13px;
+  color: #3056d3;
+}
+
+.seo-inner strong { color: #1f2328; }
+
+.seo-inner details {
+  border: 1px solid #e8e8ec;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 0 0 10px;
+  background: #fcfcfd;
+}
+
+.seo-inner summary {
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2328;
+}
+
+.seo-inner details p {
+  margin: 10px 0 0;
+}
+
 /* 状态栏 */
 .statusbar {
   flex: none;
@@ -268,4 +330,9 @@ body {
   .tagline { display: none; }
   .statusbar span:last-child { display: none; }
   .preview-shell { padding: 12px; }
+}
+
+@media (max-width: 900px) {
+  body { height: auto; min-height: 100%; }
+  .workspace { min-height: 0; }
 }
